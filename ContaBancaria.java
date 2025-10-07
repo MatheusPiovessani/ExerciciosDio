@@ -1,55 +1,70 @@
 public class ContaBancaria {
-   
+
     private double saldo;
     private double chequeEspecial;
-    private double saldoUtilizadoChequeEspecial = 0;
+    private boolean usandoChequeEspecial;
+    private double limiteTotal;
 
-    public ContaBancaria(double valor){
-        if(valor <= 500){
+    public ContaBancaria(double valor) {
+        if (valor <= 500) {
             this.chequeEspecial = 50;
-        }else{
+        } else {
             this.chequeEspecial = valor * 0.5;
         }
         this.saldo = valor;
+        this.limiteTotal = this.saldo + this.chequeEspecial;
     }
-    public double consultarSaldo(){
-        return (this.saldo+this.chequeEspecial);
+
+    public void consultarSaldo() {
+        System.out.printf("Saldo disponível: R$ %.2f%n", saldo);
+        System.out.printf("Cheque especial disponível: R$ %.2f%n", chequeEspecial);
     }
-    public double consultarChequeEspecial(){
-        return (this.chequeEspecial - this.saldoUtilizadoChequeEspecial);
+
+    public void consultarChequeEspecial() {
+        System.out.printf("Limite do cheque especial: R$ %.2f%n", chequeEspecial);
     }
+     private double definirChequeEspecial(double saldoInicial) {
+        if (saldoInicial <= 500) {
+            return 50.0;
+        } else {
+            return saldoInicial * 0.5;
+        }
+    }
+
     public void depositar(double valor) {
-        if (saldoUtilizadoChequeEspecial > 0) {
-            double valorParaCobrir = Math.min(valor, saldoUtilizadoChequeEspecial);
-            saldoUtilizadoChequeEspecial -= valorParaCobrir;
-            valor -= valorParaCobrir;
+        if (usandoChequeEspecial) {
+            double valorUsado = limiteTotal - (saldo + chequeEspecial);
+            double taxa = 0.2 * valorUsado; // taxa de 20% sobre o valor usado
+            System.out.printf("Taxa de R$ %.2f cobrada pelo uso do cheque especial.%n", taxa);
+            valor -= taxa;
+            usandoChequeEspecial = false;
+            chequeEspecial = definirChequeEspecial(saldo + valor); // reajusta limite
         }
-        this.saldo += valor;
+        saldo += valor;
+        System.out.printf("Depósito de R$ %.2f realizado com sucesso.%n", valor);
     }
-    public void sacar(double valor){
-        if(valor > consultarSaldo()){
+
+    public void sacar(double valor) {
+        if (valor <= saldo) {
+            saldo -= valor;
+        } else if (valor <= saldo + chequeEspecial) {
+            double diferenca = valor - saldo;
+            saldo = 0;
+            chequeEspecial -= diferenca;
+            usandoChequeEspecial = true;
+            System.out.println("Usando cheque especial!");
+        } else {
+            System.out.println("Saldo insuficiente para realizar o saque.");
+            return;
+        }
+        System.out.printf("Saque de R$ %.2f realizado com sucesso.%n", valor);
+    }
+
+    public void pagarBoleto(double valor) {
+        if (valor > this.saldo) {
             throw new IllegalArgumentException("Sem saldo na conta!");
         }
-       // if(this.saldoUtilizadoChequeEspecial >= this.chequeEspecial){
-         //   System.out.println("Uma taxa de 20% do valor usado do cheque especial será aplicada a voce!");
-           // this.saldo -= this.chequeEspecial * 0.20;
-        //}
-        this.saldo -= valor;
-        if(this.saldo <= this.chequeEspecial){
-            this.chequeEspecial = this.saldo;
-            this.saldo = 0;
-        }
-    }
-    public void pagarBoleto(double valor){
-        if(valor > this.saldo){
-            throw new IllegalArgumentException("Sem saldo na conta!");
-        }
-        if(this.saldo <= this.chequeEspecial){
-            System.out.println("Uma taxa de 20% do valor usado do cheque especial será aplicada a voce!");
-            this.saldo -= this.chequeEspecial * 0.20;
-            this.saldo -=valor;
-        }
-        this.saldo -=valor;
-        System.out.println("Boleto pago com sucesso!");
+        System.out.println("Pagando boleto...");
+        sacar(valor);
     }
 }
