@@ -26,14 +26,7 @@ public class ContaBancaria {
     public void consultarChequeEspecial() {
         System.out.printf("Limite do cheque especial: R$ %.2f%n", this.chequeEspecial);
     }
-     private double definirChequeEspecial(double saldoInicial) {
-        if (saldoInicial <= 500) {
-            return 50.0;
-        } else {
-            return saldoInicial * 0.5;
-        }
-    }
-
+   
     public void depositar(double valor) {
         if (usandoChequeEspecial) {
             double valorUsado = limiteTotal - (saldo + chequeEspecial);
