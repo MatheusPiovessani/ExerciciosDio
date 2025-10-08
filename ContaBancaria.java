@@ -2,7 +2,7 @@ public class ContaBancaria {
 
     private double saldo;
     private double chequeEspecial;
-    private boolean usandoChequeEspecial;
+    protected boolean usandoChequeEspecial = false;
     private double limiteTotal;
 
     public ContaBancaria(double valor) {
@@ -12,16 +12,19 @@ public class ContaBancaria {
             this.chequeEspecial = valor * 0.5;
         }
         this.saldo = valor;
-        this.limiteTotal = this.saldo + this.chequeEspecial;
+        this.limiteTotal = this.chequeEspecial;
+    }
+
+    public boolean getUsandoChequeEspecial(){
+        return this.usandoChequeEspecial;
     }
 
     public void consultarSaldo() {
-        System.out.printf("Saldo disponível: R$ %.2f%n", saldo);
-        System.out.printf("Cheque especial disponível: R$ %.2f%n", chequeEspecial);
+        System.out.println("Saldo disponível: "+this.saldo+ " e R$ "+this.chequeEspecial+ " são do Cheque Especial");
     }
 
     public void consultarChequeEspecial() {
-        System.out.printf("Limite do cheque especial: R$ %.2f%n", chequeEspecial);
+        System.out.printf("Limite do cheque especial: R$ %.2f%n", this.chequeEspecial);
     }
      private double definirChequeEspecial(double saldoInicial) {
         if (saldoInicial <= 500) {
@@ -38,20 +41,20 @@ public class ContaBancaria {
             System.out.printf("Taxa de R$ %.2f cobrada pelo uso do cheque especial.%n", taxa);
             valor -= taxa;
             usandoChequeEspecial = false;
-            chequeEspecial = definirChequeEspecial(saldo + valor); // reajusta limite
+            chequeEspecial = this.limiteTotal; // reajusta limite
         }
-        saldo += valor;
+        saldo += valor - chequeEspecial;
         System.out.printf("Depósito de R$ %.2f realizado com sucesso.%n", valor);
     }
 
     public void sacar(double valor) {
-        if (valor <= saldo) {
-            saldo -= valor;
-        } else if (valor <= saldo + chequeEspecial) {
-            double diferenca = valor - saldo;
-            saldo = 0;
-            chequeEspecial -= diferenca;
-            usandoChequeEspecial = true;
+        if (valor <= this.saldo) {
+            this.saldo -= valor;
+        } else if (valor >= this.saldo) {
+            double diferenca = valor - this.saldo;
+            this.saldo = 0;
+            this.chequeEspecial -= diferenca;
+            this.usandoChequeEspecial = true;
             System.out.println("Usando cheque especial!");
         } else {
             System.out.println("Saldo insuficiente para realizar o saque.");
@@ -61,7 +64,7 @@ public class ContaBancaria {
     }
 
     public void pagarBoleto(double valor) {
-        if (valor > this.saldo) {
+        if (valor > this.saldo + this.limiteTotal) {
             throw new IllegalArgumentException("Sem saldo na conta!");
         }
         System.out.println("Pagando boleto...");
