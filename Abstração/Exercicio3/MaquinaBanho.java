@@ -1,4 +1,4 @@
-package Exercicio3;
+package Abstração.Exercicio3;
 
 public class MaquinaBanho {
     private boolean maquinaEmUso;

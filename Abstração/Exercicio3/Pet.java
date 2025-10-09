@@ -1,4 +1,4 @@
-package Exercicio3;
+package Abstração.Exercicio3;
 
 public class Pet {
     private String nome;

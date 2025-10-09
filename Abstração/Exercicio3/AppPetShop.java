@@ -1,4 +1,4 @@
-package Exercicio3;
+package Abstração.Exercicio3;
 import java.util.Scanner;
 
 public class AppPetShop {
