@@ -30,7 +30,6 @@ A organização segue o progresso do bootcamp:
 
 Cada pasta contém os códigos e anotações de aprendizado correspondentes a cada módulo.
 
----
 
 ## 🧠 Sobre Mim
 
@@ -56,4 +55,3 @@ Se quiser trocar uma ideia sobre programação, Java ou oportunidades na área, 
 [![GitHub](https://img.shields.io/badge/GitHub-171515?style=for-the-badge&logo=github&logoColor=white)](https://github.com/matheuspiovessani)
 [![Email](https://img.shields.io/badge/Email-EE4C2C?style=for-the-badge&logo=gmail&logoColor=white)](mailto:matheuspiovessani6@gmail.com)
 
----
